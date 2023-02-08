@@ -32,6 +32,7 @@ namespace StarterAssets
 		public float JumpTimeout = 0.1f;
 		[Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
 		public float FallTimeout = 0.15f;
+		public int JumpStep = 2;
 
 		[Header("Player Grounded")]
 		[Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
@@ -63,6 +64,7 @@ namespace StarterAssets
 		// timeout deltatime
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
+		private int _jumpStep;
 
 	
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -108,6 +110,7 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
+			_jumpStep = JumpStep;
 		}
 
 		private void Update()
@@ -204,20 +207,22 @@ namespace StarterAssets
 			{
 				// reset the fall timeout timer
 				_fallTimeoutDelta = FallTimeout;
+				_jumpStep = 2;
 
 				// stop our velocity dropping infinitely when grounded
 				if (_verticalVelocity < 0.0f)
 				{
 					_verticalVelocity = -2f;
 				}
-
+		
 				// Jump
 				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
 				{
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+					_jumpStep--;
 				}
-
+		
 				// jump timeout
 				if (_jumpTimeoutDelta >= 0.0f)
 				{
@@ -226,25 +231,33 @@ namespace StarterAssets
 			}
 			else
 			{
+				if (Input.GetKeyDown(KeyCode.Space) && _jumpStep > 0)
+				{
+					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+					_jumpStep--;
+				}
+				
 				// reset the jump timeout timer
 				_jumpTimeoutDelta = JumpTimeout;
-
+		
 				// fall timeout
 				if (_fallTimeoutDelta >= 0.0f)
 				{
 					_fallTimeoutDelta -= Time.deltaTime;
 				}
-
+		
 				// if we are not grounded, do not jump
 				_input.jump = false;
+				
 			}
-
+		
 			// apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
 			if (_verticalVelocity < _terminalVelocity)
 			{
 				_verticalVelocity += Gravity * Time.deltaTime;
 			}
 		}
+		
 
 		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
 		{
