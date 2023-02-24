@@ -1149,7 +1149,7 @@ GameObject:
   - component: {fileID: 227165818}
   - component: {fileID: 227165817}
   - component: {fileID: 227165816}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1493,7 +1493,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-26876
+  m_Name: pb_Mesh43360
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -2175,7 +2175,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-34844
+  m_Name: pb_Mesh86344
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -9095,7 +9095,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-69474
+  m_Name: pb_Mesh86176
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -10718,7 +10718,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-23102
+  m_Name: pb_Mesh86436
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -10883,7 +10883,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-17182
+  m_Name: pb_Mesh43218
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -18350,7 +18350,7 @@ GameObject:
   - component: {fileID: 1077761911}
   - component: {fileID: 1077761910}
   - component: {fileID: 1077761909}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26907,7 +26907,7 @@ GameObject:
   - component: {fileID: 1893270853}
   - component: {fileID: 1893270852}
   - component: {fileID: 1893270851}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27237,14 +27237,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1893270850}
-  m_LocalRotation: {x: -0, y: -0.12261597, z: -0, w: 0.99245423}
-  m_LocalPosition: {x: 1.23, y: 0.39, z: 47.82}
+  m_LocalRotation: {x: -0, y: -0.0773738, z: -0, w: 0.9970022}
+  m_LocalPosition: {x: 0.41, y: 0.39, z: 47.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: -14.086, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -8.875, z: 0}
 --- !u!1 &1923728852
 GameObject:
   m_ObjectHideFlags: 0
@@ -28098,6 +28098,18 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 6b911390c5825014e8377183a7837d3f, type: 2}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: MoveSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: WallGravity
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: wallMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 8616685848737228372, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: m_Name
       value: PlayerCapsule

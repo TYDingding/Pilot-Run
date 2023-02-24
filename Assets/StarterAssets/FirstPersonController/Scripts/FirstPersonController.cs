@@ -9,6 +9,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 	[RequireComponent(typeof(PlayerInput))]
 #endif
+
 	public class FirstPersonController : MonoBehaviour
 	{
 		[Header("Player")]
@@ -26,6 +27,7 @@ namespace StarterAssets
 		public float JumpHeight = 1.2f;
 		[Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
 		public float Gravity = -15.0f;
+		public float WallGravity = -1.0f;
 
 		[Space(10)]
 		[Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
@@ -43,6 +45,7 @@ namespace StarterAssets
 		public float GroundedRadius = 0.5f;
 		[Tooltip("What layers the character uses as ground")]
 		public LayerMask GroundLayers;
+		public LayerMask wallMask; // Mask of wall
 
 		[Header("Cinemachine")]
 		[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
@@ -51,6 +54,8 @@ namespace StarterAssets
 		public float TopClamp = 90.0f;
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
+
+
 
 		// cinemachine
 		private float _cinemachineTargetPitch;
@@ -61,12 +66,26 @@ namespace StarterAssets
 		private float _verticalVelocity;
 		private float _terminalVelocity = 53.0f;
 
+		private Vector3 forwardDirection;
+
+
+		private bool isWallRunning;
+		private bool onLeftWall;
+		private bool onRightWall;
+		bool hasWallRun = false;
+		private RaycastHit leftWallHit;
+		private RaycastHit rightWallHit;
+		private Vector3 wallNormal;
+		private Vector3 lastWall;
+
+
+
 		// timeout deltatime
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 		private int _jumpStep;
 
-	
+
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		private PlayerInput _playerInput;
 #endif
@@ -80,11 +99,11 @@ namespace StarterAssets
 		{
 			get
 			{
-				#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 				return _playerInput.currentControlScheme == "KeyboardMouse";
-				#else
+#else
 				return false;
-				#endif
+#endif
 			}
 		}
 
@@ -117,6 +136,13 @@ namespace StarterAssets
 		{
 			JumpAndGravity();
 			GroundedCheck();
+			CheckWallRun(); // Check if is wallrunning
+
+			if (!Grounded && isWallRunning)
+			{
+				WallRunMovement();
+			}
+
 			Move();
 		}
 
@@ -130,6 +156,10 @@ namespace StarterAssets
 			// set sphere position, with offset
 			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
 			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+			if (Grounded)
+			{
+				hasWallRun = false;
+			}
 		}
 
 		private void CameraRotation()
@@ -139,7 +169,7 @@ namespace StarterAssets
 			{
 				//Don't multiply mouse input by Time.deltaTime
 				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-				
+
 				_cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
 				_rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
 
@@ -197,8 +227,14 @@ namespace StarterAssets
 				inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
 			}
 
+			Vector3 direction = inputDirection;
+			if (isWallRunning)
+			{
+				_verticalVelocity *= WallGravity;
+				direction = forwardDirection;
+			}
 			// move the player
-			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+			_controller.Move(direction.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 		}
 
 		private void JumpAndGravity()
@@ -208,13 +244,14 @@ namespace StarterAssets
 				// reset the fall timeout timer
 				_fallTimeoutDelta = FallTimeout;
 				_jumpStep = 2;
+				hasWallRun = false;
 
 				// stop our velocity dropping infinitely when grounded
 				if (_verticalVelocity < 0.0f)
 				{
 					_verticalVelocity = -2f;
 				}
-		
+
 				// Jump
 				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
 				{
@@ -222,7 +259,7 @@ namespace StarterAssets
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 					_jumpStep--;
 				}
-		
+
 				// jump timeout
 				if (_jumpTimeoutDelta >= 0.0f)
 				{
@@ -236,28 +273,28 @@ namespace StarterAssets
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 					_jumpStep--;
 				}
-				
+
 				// reset the jump timeout timer
 				_jumpTimeoutDelta = JumpTimeout;
-		
+
 				// fall timeout
 				if (_fallTimeoutDelta >= 0.0f)
 				{
 					_fallTimeoutDelta -= Time.deltaTime;
 				}
-		
+
 				// if we are not grounded, do not jump
 				_input.jump = false;
-				
+
 			}
-		
+
 			// apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
 			if (_verticalVelocity < _terminalVelocity)
 			{
 				_verticalVelocity += Gravity * Time.deltaTime;
 			}
 		}
-		
+
 
 		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
 		{
@@ -276,6 +313,73 @@ namespace StarterAssets
 
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
+		}
+
+		private void CheckWallRun()
+		{
+			Debug.Log("Check wall run!");
+			onRightWall = Physics.Raycast(transform.position, transform.right, out rightWallHit, 0.7f, wallMask);
+			onLeftWall = Physics.Raycast(transform.position, -transform.right, out leftWallHit, 0.7f, wallMask);
+
+			if ((onRightWall || onLeftWall) && !isWallRunning)
+			{
+				TestWallRun();
+			}
+			else if (!onRightWall && !onLeftWall && isWallRunning)
+			{
+				ExitWallRun();
+			}
+		}
+
+		private void WallRunMovement()
+		{
+			Debug.Log("Wall run movement!");
+			if (_input.move.y < (forwardDirection.z - 10f) && _input.move.y > (forwardDirection.z + 10f) || Input.GetKeyDown(KeyCode.Space))
+			{
+				ExitWallRun();
+			}
+		}
+
+		private void TestWallRun()
+        {
+			Debug.Log("Test wall run!");
+			wallNormal = onRightWall ? rightWallHit.normal : leftWallHit.normal;
+			if (hasWallRun)
+			{
+				float wallAngle = Vector3.Angle(wallNormal, lastWall);
+				if (wallAngle > 15)
+				{
+					WallRun();
+				}
+			}
+			else
+			{
+				hasWallRun = true;
+				WallRun();
+			}
+		}
+
+		private void WallRun()
+        {
+			Debug.Log("In wall run!");
+			isWallRunning = true;
+
+			forwardDirection = Vector3.Cross(wallNormal, Vector3.up);
+
+			if (Vector3.Dot(forwardDirection, transform.forward) < 0)
+			{
+				forwardDirection = -forwardDirection;
+			}
+
+		}
+
+		private void ExitWallRun()
+        {
+			Debug.Log("Exit wall run!");
+			isWallRunning = false;
+			lastWall = wallNormal;
+			forwardDirection = wallNormal;
+			_jumpStep = 2;
 		}
 	}
 }
