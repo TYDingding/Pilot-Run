@@ -84,7 +84,8 @@ namespace StarterAssets
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 		private int _jumpStep;
-
+		
+		private Transform _transform;
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		private PlayerInput _playerInput;
@@ -130,6 +131,8 @@ namespace StarterAssets
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
 			_jumpStep = JumpStep;
+
+			_transform = GetComponent<Transform>();
 		}
 
 		private void Update()
@@ -144,6 +147,7 @@ namespace StarterAssets
 			}
 
 			Move();
+			Crouch();
 		}
 
 		private void LateUpdate()
@@ -380,6 +384,19 @@ namespace StarterAssets
 			lastWall = wallNormal;
 			forwardDirection = wallNormal;
 			_jumpStep = 2;
+		}
+		
+		private void Crouch()
+		{
+			if (Input.GetKey(KeyCode.LeftControl))
+			{
+				_transform.localScale = new Vector3(0, 0.6f, 0);
+			}
+			else
+			{
+				_transform.localScale = new Vector3(0, 1, 0);
+			}
+			
 		}
 	}
 }
