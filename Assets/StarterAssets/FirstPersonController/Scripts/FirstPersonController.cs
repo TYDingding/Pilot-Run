@@ -65,6 +65,7 @@ namespace StarterAssets
 		private float _rotationVelocity;
 		private float _verticalVelocity;
 		private float _terminalVelocity = 53.0f;
+		private float startHeight;
 
 		private Vector3 forwardDirection;
 
@@ -133,6 +134,8 @@ namespace StarterAssets
 			_jumpStep = JumpStep;
 
 			_transform = GetComponent<Transform>();
+
+			startHeight = _transform.localScale.y;
 		}
 
 		private void Update()
@@ -390,11 +393,11 @@ namespace StarterAssets
 		{
 			if (Input.GetKey(KeyCode.LeftControl))
 			{
-				_transform.localScale = new Vector3(0, 0.6f, 0);
+				_transform.localScale = new Vector3(transform.localScale.x, 0.6f, transform.localScale.z);
 			}
 			else
 			{
-				_transform.localScale = new Vector3(0, 1, 0);
+				_transform.localScale = new Vector3(transform.localScale.x, startHeight, transform.localScale.z);
 			}
 			
 		}
