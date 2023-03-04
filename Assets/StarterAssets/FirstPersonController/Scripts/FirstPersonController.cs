@@ -140,6 +140,11 @@ namespace StarterAssets
 
 		private void Update()
 		{
+			if (MenuController.instance.isPause)
+			{
+				return;
+			}
+			
 			JumpAndGravity();
 			GroundedCheck();
 			CheckWallRun(); // Check if is wallrunning
