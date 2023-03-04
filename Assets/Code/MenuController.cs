@@ -8,6 +8,7 @@ public class MenuController : MonoBehaviour
     public static MenuController instance;
     
     public GameObject introNote;
+    public GameObject pause;
     
     public bool isPause;
     
@@ -24,23 +25,21 @@ public class MenuController : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            HideMenu();
-        }
-    }
-    
     void SwitchMenu(GameObject someMenu)
     {
         introNote.SetActive(false);
+        pause.SetActive(false);
         someMenu.SetActive(true);
     }
     
     public void ShowIntroNote()
     {
         SwitchMenu(introNote);
+    }
+    
+    public void ShowPause()
+    {
+        SwitchMenu(pause);
     }
     
     public void ShowMenu()
@@ -58,4 +57,11 @@ public class MenuController : MonoBehaviour
         isPause = false;
     }
     
+    public void ShowPauseMenu()
+    {
+        ShowPause();
+        gameObject.SetActive(true);
+        Time.timeScale = 0;
+        isPause = true;
+    }
 }

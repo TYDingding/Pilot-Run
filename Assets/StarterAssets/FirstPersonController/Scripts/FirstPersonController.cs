@@ -140,6 +140,18 @@ namespace StarterAssets
 
 		private void Update()
 		{
+			if (Input.GetKeyDown(KeyCode.Escape))
+			{
+				if (MenuController.instance.gameObject.activeSelf)
+				{
+					MenuController.instance.HideMenu();
+				}
+				else
+				{
+					MenuController.instance.ShowPauseMenu();
+				}
+				
+			}
 			if (MenuController.instance.isPause)
 			{
 				return;
