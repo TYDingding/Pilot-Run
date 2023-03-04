@@ -14,13 +14,17 @@ namespace StarterAssets
 	{
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
-		public float MoveSpeed = 4.0f;
+		public float RealTimeSpeed = 0.0f;
+		public float MoveSpeed = 6.0f;
 		[Tooltip("Sprint speed of the character in m/s")]
-		public float SprintSpeed = 6.0f;
+		public float SprintSpeed = 12.0f;
 		[Tooltip("Rotation speed of the character")]
 		public float RotationSpeed = 1.0f;
 		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
+
+		public float SlidingSpeedIncrease = 6.0f;
+		public float SlidingSpeedDecrease = 2.0f;
 
 		[Space(10)]
 		[Tooltip("The height the player can jump")]
@@ -69,6 +73,8 @@ namespace StarterAssets
 
 		private Vector3 forwardDirection;
 
+		private bool isSprinting;
+		private bool isCrouching;
 
 		private bool isWallRunning;
 		private bool onLeftWall;
@@ -79,7 +85,8 @@ namespace StarterAssets
 		private Vector3 wallNormal;
 		private Vector3 lastWall;
 
-
+		private bool isSliding;
+		private float slidingSpeed;
 
 		// timeout deltatime
 		private float _jumpTimeoutDelta;
@@ -160,6 +167,21 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			CheckWallRun(); // Check if is wallrunning
+			CheckCrouch();
+
+			if(isSliding && _speed > MoveSpeed)
+            {
+				slidingSpeed -= SlidingSpeedDecrease * Time.deltaTime * 10;
+				
+				//Debug.Log("Slide Timer = " + slideTimer);
+				//if (slideTimer <= 0) isSliding = false;
+				if (slidingSpeed < MoveSpeed + 0.5f)
+				{
+					//isSliding = false;
+					//isCrouching = true;
+					slidingSpeed = MoveSpeed;
+				}
+            }
 
 			if (!Grounded && isWallRunning)
 			{
@@ -167,7 +189,6 @@ namespace StarterAssets
 			}
 
 			Move();
-			Crouch();
 		}
 
 		private void LateUpdate()
@@ -211,7 +232,7 @@ namespace StarterAssets
 		private void Move()
 		{
 			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+			float targetSpeed = _input.sprint? SprintSpeed : MoveSpeed;
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -240,6 +261,16 @@ namespace StarterAssets
 				_speed = targetSpeed;
 			}
 
+			if (isCrouching)
+			{
+				_speed = MoveSpeed;
+			}
+			if (isSliding)
+			{
+				_speed = slidingSpeed;
+			}
+			
+
 			// normalise input direction
 			Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
 
@@ -257,6 +288,8 @@ namespace StarterAssets
 				_verticalVelocity *= WallGravity;
 				direction = forwardDirection;
 			}
+			Debug.Log(_speed);
+			RealTimeSpeed = _speed;
 			// move the player
 			_controller.Move(direction.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 		}
@@ -406,17 +439,52 @@ namespace StarterAssets
 			_jumpStep = 2;
 		}
 		
-		private void Crouch()
+		private void CheckCrouch()
 		{
-			if (Input.GetKey(KeyCode.LeftControl))
+			if (Input.GetKey(KeyCode.C))
 			{
-				_transform.localScale = new Vector3(transform.localScale.x, 0.6f, transform.localScale.z);
-			}
-			else
-			{
+				isCrouching = true;
+				Crouch();
+            }
+            else
+            {
+				isCrouching = false;
+				isSliding = false;
 				_transform.localScale = new Vector3(transform.localScale.x, startHeight, transform.localScale.z);
 			}
 			
+		}
+
+		/*
+		private void CheckSprint()
+        {
+            if (Input.GetKey(KeyCode.LeftShift) && !isCrouching)
+            {
+				isSprinting = true;
+				_speed = SprintSpeed;
+            }
+            else
+            {
+				isSprinting = false;
+				_speed = MoveSpeed;
+			}
+        }
+		*/
+
+		private void Crouch()
+        {
+			isCrouching = true;
+			_transform.localScale = new Vector3(transform.localScale.x, 0.6f, transform.localScale.z);
+			//Debug.Log("In crouch speed = " + _speed + " and sprintspeed - 1 = " + (SprintSpeed - 1.0f));
+			if (_speed > SprintSpeed - 0.5f && !isSliding)
+			{
+				isSliding = true;
+				if (Grounded)
+				{
+					slidingSpeed = SprintSpeed + SlidingSpeedIncrease;
+					_speed = slidingSpeed;
+				}
+			}
 		}
 	}
 }
