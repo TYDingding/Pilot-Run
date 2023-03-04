@@ -147,7 +147,7 @@ namespace StarterAssets
 
 		private void Update()
 		{
-			if (Input.GetKeyDown(KeyCode.Escape))
+			if (Input.GetKeyDown(KeyCode.P))
 			{
 				if (MenuController.instance.gameObject.activeSelf)
 				{
