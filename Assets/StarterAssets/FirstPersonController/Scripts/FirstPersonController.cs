@@ -288,7 +288,7 @@ namespace StarterAssets
 				_verticalVelocity *= WallGravity;
 				direction = forwardDirection;
 			}
-			Debug.Log(_speed);
+			//Debug.Log(_speed);
 			RealTimeSpeed = _speed;
 			// move the player
 			_controller.Move(direction.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
@@ -401,19 +401,16 @@ namespace StarterAssets
         {
 			Debug.Log("Test wall run!");
 			wallNormal = onRightWall ? rightWallHit.normal : leftWallHit.normal;
+			if (!wallNormal.Equals(lastWall)) lastWall = wallNormal;
 			if (hasWallRun)
 			{
-				float wallAngle = Vector3.Angle(wallNormal, lastWall);
-				if (wallAngle > 15)
-				{
-					WallRun();
-				}
-			}
-			else
-			{
+				WallRun();
+            }
+            else
+            {
 				hasWallRun = true;
 				WallRun();
-			}
+            }
 		}
 
 		private void WallRun()
