@@ -374,7 +374,7 @@ namespace StarterAssets
 
 		private void CheckWallRun()
 		{
-			Debug.Log("Check wall run!");
+			//Debug.Log("Check wall run!");
 			onRightWall = Physics.Raycast(transform.position, transform.right, out rightWallHit, 0.7f, wallMask);
 			onLeftWall = Physics.Raycast(transform.position, -transform.right, out leftWallHit, 0.7f, wallMask);
 
@@ -390,7 +390,7 @@ namespace StarterAssets
 
 		private void WallRunMovement()
 		{
-			Debug.Log("Wall run movement!");
+			//Debug.Log("Wall run movement!");
 			if (_input.move.y < (forwardDirection.z - 10f) && _input.move.y > (forwardDirection.z + 10f) || Input.GetKeyDown(KeyCode.Space))
 			{
 				ExitWallRun();
@@ -399,7 +399,7 @@ namespace StarterAssets
 
 		private void TestWallRun()
         {
-			Debug.Log("Test wall run!");
+			//Debug.Log("Test wall run!");
 			wallNormal = onRightWall ? rightWallHit.normal : leftWallHit.normal;
 			if (!wallNormal.Equals(lastWall)) lastWall = wallNormal;
 			if (hasWallRun)
@@ -415,7 +415,7 @@ namespace StarterAssets
 
 		private void WallRun()
         {
-			Debug.Log("In wall run!");
+			//Debug.Log("In wall run!");
 			isWallRunning = true;
 
 			forwardDirection = Vector3.Cross(wallNormal, Vector3.up);
@@ -429,7 +429,7 @@ namespace StarterAssets
 
 		private void ExitWallRun()
         {
-			Debug.Log("Exit wall run!");
+			//Debug.Log("Exit wall run!");
 			isWallRunning = false;
 			lastWall = wallNormal;
 			forwardDirection = wallNormal;

@@ -15,10 +15,13 @@ public class LevelLoad : MonoBehaviour
             if (currentScene == "Level 1")
             {
                 SceneManager.LoadScene("Level 2");
-            } if (currentScene == "Level 2")
+            } else if (currentScene == "Level 2")
             {
                 SceneManager.LoadScene("Level 3");
             } else if (currentScene == "Level 3")
+            {
+                SceneManager.LoadScene("Level 4");
+            } else if (currentScene == "Level 4")
             {
                 SceneManager.LoadScene("Level 1");
             }
