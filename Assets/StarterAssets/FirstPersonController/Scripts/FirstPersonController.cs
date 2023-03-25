@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -59,7 +60,7 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
-
+		public TMP_Text textTime;
 
 		// cinemachine
 		private float _cinemachineTargetPitch;
@@ -147,6 +148,7 @@ namespace StarterAssets
 
 		private void Update()
 		{
+			textTime.text = "Time: " + Data.instance.time.ToString("f2") + " s";
 			if (Input.GetKeyDown(KeyCode.P))
 			{
 				if (MenuController.instance.gameObject.activeSelf)

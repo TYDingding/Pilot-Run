@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using StarterAssets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,7 +13,7 @@ public class MenuController : MonoBehaviour
     public GameObject pause;
     
     public bool isPause;
-    
+
     void Awake()
     {
         instance = this;
