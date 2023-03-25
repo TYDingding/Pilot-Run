@@ -11,6 +11,7 @@ public class MenuController : MonoBehaviour
     
     public GameObject introNote;
     public GameObject pause;
+    public Data data;
     
     public bool isPause;
 

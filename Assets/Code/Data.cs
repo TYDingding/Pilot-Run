@@ -6,6 +6,7 @@ public class Data : MonoBehaviour
 {
     public static Data instance;
     public float time;
+    public GameObject intro;
 
     void Awake()
     {
@@ -29,6 +30,9 @@ public class Data : MonoBehaviour
     void Update()
     {
         time = time + Time.deltaTime;
-        
+        if (intro.active)
+        {
+            time = 0;
+        }
     }
 }
