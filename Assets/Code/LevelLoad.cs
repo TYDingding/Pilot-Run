@@ -23,6 +23,9 @@ public class LevelLoad : MonoBehaviour
                 SceneManager.LoadScene("Level 4");
             } else if (currentScene == "Level 4")
             {
+                SceneManager.LoadScene("Level 5");
+            } else if (currentScene == "Level 5")
+            {
                 Data.instance.time = 0;
                 SceneManager.LoadScene("Level 1");
             }
