@@ -30,9 +30,12 @@ public class Data : MonoBehaviour
     void Update()
     {
         time = time + Time.deltaTime;
-        if (intro.active)
+        if (intro)
         {
-            time = 0;
+            if (intro.active)
+            {
+                time = 0;
+            }
         }
     }
 }
