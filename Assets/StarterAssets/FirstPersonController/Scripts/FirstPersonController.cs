@@ -2,6 +2,7 @@
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
+using Cinemachine;
 #endif
 
 namespace StarterAssets
@@ -61,6 +62,15 @@ namespace StarterAssets
 		public float BottomClamp = -90.0f;
 
 		public TMP_Text textTime;
+
+		// Camera effects
+		public CinemachineVirtualCamera playerCamera;
+		private float normalFov;
+		public float specialFov;
+		public float tilt;
+		public float wallRunTilt;
+		public float cameraChangeTime;
+		public GameObject playerModel;
 
 		// cinemachine
 		private float _cinemachineTargetPitch;
@@ -144,6 +154,8 @@ namespace StarterAssets
 			_transform = GetComponent<Transform>();
 
 			startHeight = _transform.localScale.y;
+
+			normalFov = playerCamera.m_Lens.FieldOfView;
 		}
 
 		private void Update()
@@ -189,7 +201,7 @@ namespace StarterAssets
 			{
 				WallRunMovement();
 			}
-
+			CameraEffects();
 			Move();
 		}
 
@@ -485,5 +497,43 @@ namespace StarterAssets
 				}
 			}
 		}
+
+		private void CameraEffects()
+        {
+			float fov = isWallRunning ? specialFov : normalFov;
+			playerCamera.m_Lens.FieldOfView = Mathf.Lerp(playerCamera.m_Lens.FieldOfView, fov, 60 * Time.deltaTime);
+			float x = playerCamera.transform.localEulerAngles.x;
+			float y = playerCamera.transform.localEulerAngles.y;
+			float tx = playerModel.transform.localEulerAngles.x;
+			float ty = playerModel.transform.localEulerAngles.y;
+			float cameraDistance = playerCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().CameraDistance;
+
+			if (isWallRunning)
+            {
+                if (onRightWall)
+                {
+					playerCamera.m_Lens.Dutch = wallRunTilt;
+
+					playerModel.transform.localEulerAngles = new Vector3(tx, ty, wallRunTilt);
+					playerCamera.transform.localEulerAngles = new Vector3(x, y, wallRunTilt);
+					playerCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().CameraDistance = Mathf.Lerp(cameraDistance, 3, cameraChangeTime * Time.deltaTime);
+				}
+				else if (onLeftWall)
+                {
+					playerModel.transform.localEulerAngles = new Vector3(tx, ty, -wallRunTilt);
+					//playerModel.transform.position = new Vector3(lastWall.x, playerModel.transform.position.y, playerModel.transform.position.z);
+					playerCamera.m_Lens.Dutch = -wallRunTilt;
+					playerCamera.transform.localEulerAngles = new Vector3(x, y, -wallRunTilt);
+					playerCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().CameraDistance = Mathf.Lerp(cameraDistance, 3, cameraChangeTime * Time.deltaTime);
+				}
+            }
+            else
+            {
+				playerCamera.m_Lens.Dutch = 0;
+				playerCamera.transform.localEulerAngles = new Vector3(x, y, 0f);
+				playerModel.transform.localEulerAngles = new Vector3(tx, ty, 0f);
+				playerCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().CameraDistance = Mathf.Lerp(cameraDistance, 0, cameraChangeTime * Time.deltaTime);
+			}
+        }
 	}
 }
