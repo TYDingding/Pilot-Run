@@ -191,7 +191,7 @@ namespace StarterAssets
 			{
 				return;
 			}
-			
+			//Cursor.lockState = CursorLockMode.None;
 			JumpAndGravity();
 			GroundedCheck();
 			CheckWallRun(); // Check if is wallrunning
