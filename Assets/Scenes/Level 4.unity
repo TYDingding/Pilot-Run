@@ -944,6 +944,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5360442364714354710, guid: f09a44f07b7982c44a5dd5996871e35f, type: 3}
   m_PrefabInstance: {fileID: 282816847}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &282816850 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4009659067761939281, guid: f09a44f07b7982c44a5dd5996871e35f, type: 3}
+  m_PrefabInstance: {fileID: 282816847}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &356143320
 Mesh:
   m_ObjectHideFlags: 0
@@ -3681,6 +3692,10 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 630259435}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: textFinishTime
+      value: 
+      objectReference: {fileID: 282816850}
     - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: wallMask.m_Bits
       value: 64

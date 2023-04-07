@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using Cinemachine;
@@ -62,6 +63,7 @@ namespace StarterAssets
 		public float BottomClamp = -90.0f;
 
 		public TMP_Text textTime;
+		public TMP_Text textFinishTime;
 
 		// Camera effects
 		public CinemachineVirtualCamera playerCamera;
@@ -161,6 +163,18 @@ namespace StarterAssets
 		private void Update()
 		{
 			textTime.text = "Time: " + Data.instance.time.ToString("f2") + " s";
+			textFinishTime.text = "Total game time is " + Data.instance.time.ToString("f2") + " s";
+			if (MenuController.instance.finish)
+			{
+				if (Input.GetKeyDown(KeyCode.R))
+				{
+					MenuController.instance.HideMenu();
+					Data.instance.time = 0;
+					SceneManager.LoadScene("Level 1");
+				
+				}
+			}
+			
 			if (Input.GetKeyDown(KeyCode.P))
 			{
 				if (MenuController.instance.gameObject.activeSelf)

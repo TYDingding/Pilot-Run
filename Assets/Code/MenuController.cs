@@ -11,6 +11,7 @@ public class MenuController : MonoBehaviour
     
     public GameObject introNote;
     public GameObject pause;
+    public GameObject finish;
     public Data data;
     
     public bool isPause;
@@ -32,6 +33,7 @@ public class MenuController : MonoBehaviour
     {
         introNote.SetActive(false);
         pause.SetActive(false);
+        finish.SetActive(false);
         someMenu.SetActive(true);
     }
     
@@ -43,6 +45,11 @@ public class MenuController : MonoBehaviour
     public void ShowPause()
     {
         SwitchMenu(pause);
+    }
+    
+    public void ShowFinish()
+    {
+        SwitchMenu(finish);
     }
     
     public void ShowMenu()
@@ -66,5 +73,20 @@ public class MenuController : MonoBehaviour
         gameObject.SetActive(true);
         Time.timeScale = 0;
         isPause = true;
+    }
+    
+    public void ShowFinishMenu()
+    {
+        ShowFinish();
+        gameObject.SetActive(true);
+        Time.timeScale = 0;
+        isPause = true;
+    }
+    
+    public void PlayAgainn()
+    {
+        HideMenu();
+        Data.instance.time = 0;
+        SceneManager.LoadScene("Level 1");
     }
 }

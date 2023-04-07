@@ -24,10 +24,9 @@ public class LevelLoad : MonoBehaviour
             } else if (currentScene == "Level 4")
             {
                 SceneManager.LoadScene("Level 5");
-            } else if (currentScene == "Level 5")
+            } else
             {
-                Data.instance.time = 0;
-                SceneManager.LoadScene("Level 1");
+                MenuController.instance.ShowFinishMenu();
             }
         }
     }
