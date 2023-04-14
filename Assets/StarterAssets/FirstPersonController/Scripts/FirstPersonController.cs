@@ -74,6 +74,10 @@ namespace StarterAssets
 		public float cameraChangeTime;
 		public GameObject playerModel;
 
+		// Jetpack Flame
+		public GameObject leftRocketFlame;
+		public GameObject rightRocketFlame;
+
 		// cinemachine
 		private float _cinemachineTargetPitch;
 
@@ -158,6 +162,8 @@ namespace StarterAssets
 			startHeight = _transform.localScale.y;
 
 			normalFov = playerCamera.m_Lens.FieldOfView;
+			leftRocketFlame.SetActive(false);
+			rightRocketFlame.SetActive(false);
 		}
 
 		private void Update()
@@ -531,6 +537,9 @@ namespace StarterAssets
 					playerModel.transform.localEulerAngles = new Vector3(tx, ty, wallRunTilt);
 					playerCamera.transform.localEulerAngles = new Vector3(x, y, wallRunTilt);
 					playerCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().CameraDistance = Mathf.Lerp(cameraDistance, 3, cameraChangeTime * Time.deltaTime);
+
+					// Light the left fire
+					leftRocketFlame.SetActive(true);
 				}
 				else if (onLeftWall)
                 {
@@ -539,6 +548,9 @@ namespace StarterAssets
 					playerCamera.m_Lens.Dutch = -wallRunTilt;
 					playerCamera.transform.localEulerAngles = new Vector3(x, y, -wallRunTilt);
 					playerCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().CameraDistance = Mathf.Lerp(cameraDistance, 3, cameraChangeTime * Time.deltaTime);
+
+					// Light the right fire
+					rightRocketFlame.SetActive(true);
 				}
             }
             else
@@ -547,7 +559,12 @@ namespace StarterAssets
 				playerCamera.transform.localEulerAngles = new Vector3(x, y, 0f);
 				playerModel.transform.localEulerAngles = new Vector3(tx, ty, 0f);
 				playerCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().CameraDistance = Mathf.Lerp(cameraDistance, 0, cameraChangeTime * Time.deltaTime);
+				leftRocketFlame.SetActive(false);
+				rightRocketFlame.SetActive(false);
 			}
         }
+
+
+
 	}
 }
