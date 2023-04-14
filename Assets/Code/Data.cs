@@ -6,7 +6,6 @@ public class Data : MonoBehaviour
 {
     public static Data instance;
     public float time;
-    public GameObject intro;
 
     void Awake()
     {
@@ -29,13 +28,13 @@ public class Data : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        time = time + Time.deltaTime;
-        if (intro)
+        if (MenuController.instance.gameObject.activeSelf)
         {
-            if (intro.active)
-            {
-                time = 0;
-            }
+            Time.timeScale = 0;
+        }
+        else
+        {
+            time = time + Time.deltaTime;
         }
     }
 }

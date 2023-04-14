@@ -58,6 +58,7 @@ public class MenuController : MonoBehaviour
         gameObject.SetActive(true);
         Time.timeScale = 0;
         isPause = true;
+        Data.instance.time = 0;
     }
         
     public void HideMenu()
@@ -81,12 +82,5 @@ public class MenuController : MonoBehaviour
         gameObject.SetActive(true);
         Time.timeScale = 0;
         isPause = true;
-    }
-    
-    public void PlayAgainn()
-    {
-        HideMenu();
-        Data.instance.time = 0;
-        SceneManager.LoadScene("Level 1");
     }
 }
