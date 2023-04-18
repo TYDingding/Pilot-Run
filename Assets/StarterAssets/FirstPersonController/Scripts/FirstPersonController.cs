@@ -170,14 +170,15 @@ namespace StarterAssets
 		{
 			textTime.text = "Time: " + Data.instance.time.ToString("f2") + " s";
 			textFinishTime.text = "Total game time is " + Data.instance.time.ToString("f2") + " s";
+			
 			if (MenuController.instance.finish)
 			{
 				if (Input.GetKeyDown(KeyCode.R))
 				{
 					MenuController.instance.HideMenu();
 					Data.instance.time = 0;
+					Data.instance.flag = true;
 					SceneManager.LoadScene("Level 1");
-				
 				}
 			}
 			

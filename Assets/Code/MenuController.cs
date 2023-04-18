@@ -12,14 +12,17 @@ public class MenuController : MonoBehaviour
     public GameObject introNote;
     public GameObject pause;
     public GameObject finish;
-    public Data data;
-    
-    public bool isPause;
 
+    public bool isPause;
+    
     void Awake()
     {
         instance = this;
-        if (SceneManager.GetActiveScene().name == "Level 1")
+    }
+
+    void Start()
+    {
+        if (SceneManager.GetActiveScene().name == "Level 1" && Data.instance.flag)
         {
             ShowMenu();
         }
@@ -59,6 +62,7 @@ public class MenuController : MonoBehaviour
         Time.timeScale = 0;
         isPause = true;
         Data.instance.time = 0;
+        
     }
         
     public void HideMenu()

@@ -12,6 +12,7 @@ public class KillZone : MonoBehaviour
         if (other.gameObject.GetComponent<FirstPersonController>())
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            Data.instance.flag = false;
         }
     }
 }
