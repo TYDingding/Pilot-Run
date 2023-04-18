@@ -13,6 +13,7 @@ public class KillZone : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             Data.instance.flag = false;
+            Data.instance.fallTime++;
         }
     }
 }

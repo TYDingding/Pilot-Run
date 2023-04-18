@@ -11,6 +11,12 @@ public class LevelLoad : MonoBehaviour
     {
         if (other.gameObject.GetComponent<FirstPersonController>())
         {
+            if (Data.instance.fallTime == 0)
+            {
+                Data.instance.time = Data.instance.time - 5;
+            }
+            Data.instance.fallTime = 0;
+            
             string currentScene = SceneManager.GetActiveScene().name;
             if (currentScene == "Level 1")
             {

@@ -7,6 +7,7 @@ public class Data : MonoBehaviour
     public static Data instance;
     public float time;
     public bool flag;
+    public int fallTime;
 
     void Awake()
     {
@@ -20,6 +21,7 @@ public class Data : MonoBehaviour
             Destroy(gameObject);
         }
         flag = true;
+        fallTime = 0;
     }
     
     void Start()
